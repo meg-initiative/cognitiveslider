@@ -1,12 +1,12 @@
-/* CognitiveSlider 1.0.0 - source-only technical preview. */
+/* CognitiveSlider 1.1.0 - source-only technical preview. */
 (() => {
   'use strict';
   const adapter = globalThis.MCSAdapters[location.hostname];
   if (!adapter || document.getElementById('cognitive-slider-extension')) return;
   const core = globalThis.MCSCore;
-  let currentLevel = 5, busy = false, bypass = false, pendingCreation = false;
-  let path = location.pathname, lastSuffix = '', lastEditor = null;
-  const levels = new Map(); // Only numeric settings, in this tab's memory.
+  let currentLevel = 5, busy = false, bypass = false;
+  let lastSuffix = '', lastEditor = null;
+  const conversation = globalThis.MCSConversation.create(location.hostname, location.pathname);
   const host = document.createElement('div');
   host.id = 'cognitive-slider-extension';
   host.style.cssText = 'position:fixed;right:16px;top:72px;z-index:2147483647;max-width:calc(100vw - 32px);';
@@ -35,7 +35,7 @@
   const status = shadow.getElementById('status');
   const meanings = ['No added MCS; ordinary AI behavior.', 'Answer with the principle.', 'Answer with an optional understanding check.', 'Clarify the goal or a constraint first.', 'Choose between approaches.', 'Choose and justify before the solution.', 'Continue from a framework and first step.', 'Try first; receive hints and feedback.', 'Contribute at each key step.', 'Propose the method and solution.', 'Build the method, solution and verification.'];
   function setLevel(n) {
-    currentLevel = core.level(n); slider.value = String(n); levels.set(path, n);
+    currentLevel = core.level(n); slider.value = String(n); conversation.set(n);
     shadow.getElementById('value').textContent = (n / 10).toFixed(1);
     shadow.getElementById('summary-level').textContent = (n / 10).toFixed(1);
     shadow.getElementById('meaning').textContent = meanings[n];
@@ -67,14 +67,8 @@
     return text(el) === value;
   }
   function refreshRoute() {
-    if (location.pathname === path) return;
-    const next = location.pathname;
-    // The first send normally changes / or /new or /app into a chat URL.
-    // Carry that chat's setting once; unrelated existing chats use their own value.
-    const newChat = path === '/' || path === '/new' || path === '/app';
-    const createdChat = /\/(?:c|chat|app)\/[^/]+/.test(next);
-    const n = levels.has(next) ? levels.get(next) : pendingCreation && newChat && createdChat ? currentLevel : 5;
-    pendingCreation = false; path = next; lastSuffix = ''; lastEditor = null; setLevel(n);
+    if (!conversation.update(location.pathname)) return;
+    lastSuffix = ''; lastEditor = null; setLevel(conversation.get());
   }
   function prepare() {
     refreshRoute();
@@ -112,12 +106,13 @@
   });
   function intercept(event) {
     if (bypass) return;
+    refreshRoute();
     const ready = editor();
     // A reviewed/prepared draft can use the user's genuine platform event.
     if (!busy && ready && ready === lastEditor && lastSuffix === core.suffix(currentLevel) && text(ready).endsWith(lastSuffix)) {
       const requested = core.command(core.base(text(ready), lastSuffix));
       if (requested === null || requested === currentLevel) {
-        pendingCreation = path === '/' || path === '/new' || path === '/app';
+        conversation.sent();
         status.textContent = 'Prepared message passed to the platform.';
         return;
       }
@@ -134,7 +129,7 @@
         if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true' || !prepared.el.isConnected || text(prepared.el) !== prepared.value) {
           status.textContent = 'Prepared, not sent. Review the draft and use the platform Send button.'; return;
         }
-        pendingCreation = path === '/' || path === '/new' || path === '/app';
+        conversation.sent();
         bypass = true; button.click();
         status.textContent = 'MCS instructions passed to the platform Send button.';
       } finally { bypass = false; busy = false; }

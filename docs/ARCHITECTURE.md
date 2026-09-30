@@ -11,6 +11,7 @@ The MD can be pasted into provider instructions. The extension appends an equiva
 - `manifest.json`: Manifest V3; three explicit HTTPS domains; isolated content scripts at document idle; no service worker.
 - `protocol.js`: generated protocol string; no network fetch.
 - `core.js`: level validation, suffix generation, direct command parsing and exact tracked block removal.
+- `conversation.js`: stable conversation identity, account scoping and transient numeric level state.
 - `adapters.js`: separate platform selectors; no broad generic Send-label fallback.
 - `content.js`: isolated panel in a shadow root, composer operations, send interception and ephemeral numeric state.
 
@@ -32,9 +33,9 @@ The browser editing operation uses `document.execCommand('insertText')`, a legac
 
 ## Level lifecycle
 
-Default 05. Levels are kept per pathname in the current tab's memory. New unvisited paths default to 05. A send from the new-chat path can carry its chosen level into the newly assigned chat path. Reloads discard state. No cross-tab synchronization, audits or persistent counters exist.
+Default 05. Levels are kept per stable conversation ID and account scope in the current tab's memory. The tracker ignores trailing slashes and message/response subroutes. Gemini account prefixes such as `/u/0` are separated from the conversation ID. Unrecognized intermediate routes do not reset the active setting.
 
-URL patterns and the first-send transition are adapter maintenance concerns. An SPA can navigate in ways this generic path heuristic does not recognize; include those in live acceptance testing.
+A new conversation starts at 05. A Send action from a new-chat page transfers the selected level to the newly assigned conversation ID. Moving to another existing conversation restores that conversation's known level or defaults to 05. Reloads still discard memory; no persistent storage or new permissions are introduced.
 
 ## Extension points
 

@@ -1,4 +1,4 @@
-# Future development - not implemented in v1.0
+# Future development - not implemented in v1.1.0
 
 The current release only asks the AI to apply the user-selected MCS interaction rules. The following are possible independent additions, not working commands in this release.
 

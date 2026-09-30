@@ -21,7 +21,7 @@ const root = path.resolve(__dirname, '..');
     const errors=[]; page.on('pageerror', e=>errors.push(e.message));
     await context.route('https://'+domain+'/**',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html><body><form>'+markup+'</form></body></html>'}));
     await page.goto('https://'+domain+'/');
-    for (const file of ['protocol.js','core.js','adapters.js','content.js']) await page.addScriptTag({path:path.join(root,'extension',file)});
+    for (const file of ['protocol.js','core.js','conversation.js','adapters.js','content.js']) await page.addScriptTag({path:path.join(root,'extension',file)});
     await page.evaluate(()=>{
       window.sent=[];
       const editor=document.querySelector('[contenteditable],textarea');
@@ -50,7 +50,7 @@ const root = path.resolve(__dirname, '..');
     await page.locator('form button').click();
     await page.waitForFunction(()=>sent.length===3);
     assert((await page.evaluate(()=>sent[2])).includes('MCS_LEVEL=00'));
-    await page.evaluate(()=>history.pushState({},'', '/c/created-chat'));
+    await page.evaluate(()=>history.pushState({},'', location.hostname === 'gemini.google.com' ? '/app/created-chat' : location.hostname === 'claude.ai' ? '/chat/created-chat' : '/c/created-chat'));
     await page.waitForTimeout(900);
     assert.equal(await panel.locator('input').inputValue(),'0');
     await editor.fill('New message');await panel.locator('#prepare').click();
@@ -58,7 +58,7 @@ const root = path.resolve(__dirname, '..');
     assert((await editor.evaluate(el=>el.value ?? el.innerText)).includes('MCS_LEVEL=09'));
     await editor.press('End');await editor.press('Shift+Enter');
     assert.equal(await page.evaluate(()=>sent.length),3);
-    await page.evaluate(()=>history.pushState({},'', '/unseen-conversation'));
+    await page.evaluate(()=>history.pushState({},'', location.hostname === 'gemini.google.com' ? '/app/unseen-chat' : location.hostname === 'claude.ai' ? '/chat/unseen-chat' : '/c/unseen-chat'));
     await page.waitForTimeout(900);
     assert.equal(await panel.locator('input').inputValue(),'5');
     await page.evaluate(()=>{
@@ -73,6 +73,37 @@ const root = path.resolve(__dirname, '..');
     assert.deepEqual(errors,[]);
     console.log(domain+(markup.includes('textarea id')?' textarea':' contenteditable')+': send, input synchronization, Enter, zero, deduplication, remove, slider, route reset passed.');
     await context.unrouteAll();await page.close();
+  }
+  // Regression: Gemini account-prefixed URLs and per-response subroutes.
+  {
+    const page=await context.newPage();
+    await context.route('https://gemini.google.com/**',r=>r.fulfill({contentType:'text/html',body:'<form><rich-textarea><div class="ql-editor" contenteditable="true"></div></rich-textarea><button class="send-button">Send</button></form>'}));
+    await page.goto('https://gemini.google.com/u/0/app/');
+    for (const file of ['protocol.js','core.js','conversation.js','adapters.js','content.js']) await page.addScriptTag({path:path.join(root,'extension',file)});
+    await page.evaluate(()=>{
+      window.sent=[];const e=document.querySelector('[contenteditable]');
+      document.querySelector('form').addEventListener('submit',event=>{
+        event.preventDefault();sent.push(e.innerText);e.innerText='';
+        history.pushState({},'', '/u/0/app/stable-chat/response/'+sent.length);
+      });
+    });
+    const panel=page.locator('#cognitive-slider-extension');
+    await panel.locator('input').fill('8');
+    for (let i=1;i<=4;i++) {
+      await page.locator('[contenteditable]').fill('Question '+i);
+      await page.locator('form button').click();
+      await page.waitForFunction(n=>sent.length===n,i);
+      await page.waitForTimeout(900);
+      assert.equal(await panel.locator('input').inputValue(),'8');
+      assert((await page.evaluate(()=>sent[sent.length-1])).includes('MCS_LEVEL=08'));
+    }
+    await panel.locator('input').fill('0');
+    await page.locator('[contenteditable]').fill('One more question');
+    await page.locator('form button').click();await page.waitForFunction(()=>sent.length===5);
+    await page.waitForTimeout(900);assert.equal(await panel.locator('input').inputValue(),'0');
+    assert((await page.evaluate(()=>sent[4])).includes('MCS_LEVEL=00'));
+    await context.unrouteAll();await page.close();
+    console.log('Gemini regression: five consecutive messages retain 0.8, then 0.0 across account-prefixed response URLs.');
   }
   } finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exitCode=1;});

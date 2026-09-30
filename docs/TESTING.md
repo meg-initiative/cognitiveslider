@@ -1,6 +1,6 @@
 # Testing and release status
 
-Release: **1.0.0 technical preview**. Local verification: **2026-09-30**.
+Release: **1.1.0 technical preview**. Local verification: **2026-09-30**.
 
 ## Performed
 
@@ -38,3 +38,7 @@ An English `aria-label` is used by one Claude send-button selector; localized va
 ## Reproducing tests
 
 Run the commands in README.md. For a managed environment with an existing browser install, `tests/browser.cjs` accepts `MCS_PLAYWRIGHT_MODULE`, `MCS_CHROMIUM_PATH` and `MCS_CHROMIUM_ARGS` (a JSON array). These configure the test runner only and are not used by the extension.
+
+## v1.1.0 regression
+
+The user reported successful live Gemini injection in the published v1.0.2 package but a level reset between messages. The old code keyed state by the full pathname. Local regressions demonstrate resets on account-prefixed new-chat transitions and per-response subroutes. v1.1.0 uses stable conversation IDs, preserves zero as well as nonzero values, and ignores unknown intermediate routes. Tests cover five consecutive Gemini fixture submissions with URL changes. This isolates a code defect; it does not establish that every reported live reset has the same cause. The fix still needs confirmation in the user's live Gemini session.

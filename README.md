@@ -13,13 +13,13 @@ CognitiveSlider applies the MCS interaction protocol at a level you choose: **0.
 | Install a local Chrome extension. Move the slider, then send a text message. | Copy the Markdown protocol into your AI's personal instructions. |
 | Platform adapters for ChatGPT, Claude and Gemini. | Plain English instructions, independent of a browser integration. |
 | Adds the protocol and current level to each supported text submission. | The platform includes your saved instructions wherever its settings apply. |
-| [Download the extension ZIP](releases/cognitiveslider-extension-v1.0.0.zip) | [Read or download the MD](protocol/cognitiveslider.md) |
+| [Download the extension ZIP](releases/cognitiveslider-extension-v1.1.0.zip) | [Read or download the MD](protocol/cognitiveslider.md) |
 
 **Status: technical preview.** The protocol and extension are inspectable source code. Automated tests cover local editor fixtures; authenticated live sessions on the three providers have not been tested. Platform changes may require adapter updates. AI compliance is not deterministic and is not certified by the slider.
 
 ## Install the slider in Chrome
 
-1. Download [`cognitiveslider-extension-v1.0.0.zip`](releases/cognitiveslider-extension-v1.0.0.zip). On GitHub's file page, use **Download raw file** if necessary.
+1. Download [`cognitiveslider-extension-v1.1.0.zip`](releases/cognitiveslider-extension-v1.1.0.zip). On GitHub's file page, use **Download raw file** if necessary.
 2. Extract it into a folder you will keep.
 3. Open `chrome://extensions` in Chrome.
 4. Enable **Developer mode**.
@@ -85,6 +85,7 @@ No dependencies are required for the extension itself. All executable code is bu
 ```sh
 python3 scripts/build.py
 node tests/core.test.cjs
+node tests/conversation.test.cjs
 ```
 
 For optional local browser fixture tests:

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "CognitiveSlider",
-  "version": "1.0.0",
-  "version_name": "1.0.0 technical preview",
+  "version": "1.1.0",
+  "version_name": "1.1.0 technical preview",
   "description": "Choose your participation level in AI conversations. Adds the MCS protocol to text messages.",
   "homepage_url": "https://cognitiveslider.org/",
   "content_scripts": [
@@ -15,6 +15,7 @@
       "js": [
         "protocol.js",
         "core.js",
+        "conversation.js",
         "adapters.js",
         "content.js"
       ],

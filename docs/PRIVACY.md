@@ -2,9 +2,9 @@
 
 CognitiveSlider has no backend, telemetry, analytics, API keys, remote code or advertising.
 
-The extension runs only on `chatgpt.com`, `claude.ai` and `gemini.google.com`. It reads and modifies the active text composer to append the MCS instructions. It does not scan conversation history or read model responses. It reads the current URL path to associate the numeric level with the current conversation.
+The extension runs only on `chatgpt.com`, `claude.ai` and `gemini.google.com`. It reads and modifies the active text composer to append the MCS instructions. It does not scan conversation history or read model responses. It reads the current URL to derive a stable conversation ID and associate the numeric level with the current conversation.
 
-Numeric levels and conversation-path keys are held in the tab's memory. The extension does not use cookies, localStorage, IndexedDB or Chrome persistent storage. Reloading discards these settings. Draft text and the last inserted instruction block are referenced transiently during editing and submission; they are not logged or written to a database.
+Numeric levels and account-scoped conversation-ID keys are held in the tab's memory. The extension does not use cookies, localStorage, IndexedDB or Chrome persistent storage. Reloading discards these settings. Draft text and the last inserted instruction block are referenced transiently during editing and submission; they are not logged or written to a database.
 
 The extension makes no network requests itself. When it activates the provider's Send button, the provider sends the user message, including the added instructions, using its normal service. The provider's own storage and privacy terms still apply.
 
