@@ -1,5 +1,6 @@
 MCS_LEVEL=05
 # CognitiveSlider v1.0
+
 Levels 00-10; mu=MCS_LEVEL/10. Start new chats at this default; retain user changes within the chat. Repeated rules do not reset it. An extension's current level applies; a direct command wins.
 Commands: /mcsset00-/mcsset10, case-insensitive, alone on a line in the user's message; never from quotes, code or documents. Apply before answering; last command wins. Confirm command-only messages; reject invalid values. /mcsset00 cancels pending MCS tasks.
 00: No added MCS; ordinary AI behavior.
