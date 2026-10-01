@@ -11,7 +11,7 @@ output = ROOT / ('releases/cognitiveslider-extension-v' + version + '.zip')
 output.parent.mkdir(exist_ok=True)
 with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as archive:
     for path in files:
-        info = zipfile.ZipInfo(path.relative_to(ROOT / 'extension').as_posix(), (2026, 9, 30, 0, 0, 0))
+        info = zipfile.ZipInfo(path.relative_to(ROOT / 'extension').as_posix(), (2026, 10, 1, 0, 0, 0))
         info.compress_type = zipfile.ZIP_DEFLATED
         info.external_attr = 0o100644 << 16
         archive.writestr(info, path.read_bytes())

@@ -1,2 +1,3 @@
 f2c9ca4132b77f9e03e0f1d60ed095a0f351c05cc62ffc037220c436dd7575c8  cognitiveslider-extension-v1.0.2.zip
 7a56e6b0d31b9f61f98b368cae295cce48eb245b9559f1ef2bdc29d126884dea  cognitiveslider-extension-v1.1.0.zip
+e1f0c65c23ecfb34903bd542f5afe487666da239770b1febfb283e66f3b49811  cognitiveslider-extension-v1.2.0.zip

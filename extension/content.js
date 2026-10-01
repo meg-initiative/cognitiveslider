@@ -1,4 +1,4 @@
-/* CognitiveSlider 1.1.0 - source-only technical preview. */
+/* CognitiveSlider 1.2.0 - source-only technical preview. */
 (() => {
   'use strict';
   const adapter = globalThis.MCSAdapters[location.hostname];
@@ -33,7 +33,7 @@
   document.documentElement.append(host);
   const slider = shadow.getElementById('level');
   const status = shadow.getElementById('status');
-  const meanings = ['No added MCS; ordinary AI behavior.', 'Answer with the principle.', 'Answer with an optional understanding check.', 'Clarify the goal or a constraint first.', 'Choose between approaches.', 'Choose and justify before the solution.', 'Continue from a framework and first step.', 'Try first; receive hints and feedback.', 'Contribute at each key step.', 'Propose the method and solution.', 'Build the method, solution and verification.'];
+  const meanings = ["No MCS; ordinary behavior.", "Answer with the key principle.", "Answer and explain; identify your decisions.", "Clarify a relevant goal or constraint, then solve.", "You choose an approach; the AI carries it out.", "You choose and justify; work and check together.", "You propose the next step from a framework.", "You attempt first; the AI gives hints and feedback.", "You lead each key step; the AI guides and checks.", "You propose method and solution; the AI guides and flags errors.", "You build and verify; the AI asks, hints and flags."];
   function setLevel(n) {
     currentLevel = core.level(n); slider.value = String(n); conversation.set(n);
     shadow.getElementById('value').textContent = (n / 10).toFixed(1);
@@ -50,7 +50,7 @@
     const matches = [...new Set(adapter.sends.flatMap(s => [...document.querySelectorAll(s)]))].filter(el => visible(el) && el.dataset.testid !== 'stop-button');
     return matches.length === 1 ? matches[0] : null;
   }
-  function text(el) { return el instanceof HTMLTextAreaElement ? el.value : el.innerText.replace(/\r\n/g, '\n'); }
+  function text(el) { return el instanceof HTMLTextAreaElement ? el.value : el.innerText.replace(/\r\n/g, '\n').replace(/\u00a0/g, ' '); }
   function write(el, value) {
     el.focus();
     if (el instanceof HTMLTextAreaElement) {
@@ -62,7 +62,12 @@
       // Do not assign innerHTML/textContent: that can desynchronize editor state.
       const selection = window.getSelection(), range = document.createRange();
       range.selectNodeContents(el); selection.removeAllRanges(); selection.addRange(range);
-      if (!document.execCommand('insertText', false, value)) return false;
+      const lines = value.split('\n');
+      if (!document.execCommand('insertText', false, lines[0])) return false;
+      for (const line of lines.slice(1)) {
+        if (!document.execCommand('insertLineBreak', false)) return false;
+        if (line && !document.execCommand('insertText', false, line)) return false;
+      }
     }
     return text(el) === value;
   }

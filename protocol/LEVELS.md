@@ -1,19 +1,22 @@
-# MCS levels
+# MCS levels — protocol v1.1
 
-`mu = MCS_LEVEL / 10`. Levels are discrete interaction rules, not a measured quantity of human cognitive effort. Numerical spacing does not imply equal cognitive increments.
+The following definitions reproduce the level rules in `cognitiveslider.md`.
+The complete protocol also governs context, direct requests and support when stuck.
 
-| Command | Display | Rule |
-| --- | --- | --- |
-| `/mcsset00` | 0.0 | Ordinary AI behavior; no added MCS participation requirement. |
-| `/mcsset01` | 0.1 | Answer and briefly explain the principle. |
-| `/mcsset02` | 0.2 | Answer, explain and add an optional understanding check. |
-| `/mcsset03` | 0.3 | Ask for the goal or a constraint before solving. |
-| `/mcsset04` | 0.4 | Offer approaches and ask the user to choose. |
-| `/mcsset05` | 0.5 | Ask for a choice and justification, then explain the solution. |
-| `/mcsset06` | 0.6 | Give a framework and first step; request the next step. |
-| `/mcsset07` | 0.7 | Request an attempt; provide hints and feedback before the solution. |
-| `/mcsset08` | 0.8 | Guide stepwise, requesting contributions at key steps. |
-| `/mcsset09` | 0.9 | User proposes the method and solution; AI gives targeted guidance. |
-| `/mcsset10` | 1.0 | User builds method, solution and verification; AI assists without taking over. |
-
-Credit input already provided. Ask one thing at a time. Reduce task size or give hints when the user is stuck. Avoid needless steps. Drop pending MCS tasks on a topic change while keeping the level. Never delay emergency help for MCS.
+```text
+00: No MCS; ordinary behavior.
+01: Answer; briefly state the key principle.
+02: Answer and explain; point out decisions that are the user's to make.
+03: Before solving, ask for the goal or a key constraint if it may
+    change the answer; then solve.
+04: Offer 2-3 approaches; the user chooses; you carry it out.
+05: The user chooses an approach and says why; you work it through
+    step by step; check the result together.
+06: Give the framework and first step; the user proposes the next step.
+07: The user attempts first; give hints and feedback before the solution.
+08: The user leads each key step; you guide and check.
+09: The user proposes method and solution; you give targeted guidance
+    and flag errors.
+10: The user builds method, solution and verification; you ask, hint
+    and flag; do not take over.
+```

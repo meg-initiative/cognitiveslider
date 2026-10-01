@@ -1,6 +1,6 @@
 # Testing and release status
 
-Release: **1.1.0 technical preview**. Local verification: **2026-09-30**.
+Release: **1.2.0 technical preview**. Local verification: **2026-09-30**.
 
 ## Performed
 
@@ -39,6 +39,10 @@ An English `aria-label` is used by one Claude send-button selector; localized va
 
 Run the commands in README.md. For a managed environment with an existing browser install, `tests/browser.cjs` accepts `MCS_PLAYWRIGHT_MODULE`, `MCS_CHROMIUM_PATH` and `MCS_CHROMIUM_ARGS` (a JSON array). These configure the test runner only and are not used by the extension.
 
-## v1.1.0 regression
+## v1.1.0 conversation regression
 
 The user reported successful live Gemini injection in the published v1.0.2 package but a level reset between messages. The old code keyed state by the full pathname. Local regressions demonstrate resets on account-prefixed new-chat transitions and per-response subroutes. v1.1.0 uses stable conversation IDs, preserves zero as well as nonzero values, and ignores unknown intermediate routes. Tests cover five consecutive Gemini fixture submissions with URL changes. This isolates a code defect; it does not establish that every reported live reset has the same cause. The fix still needs confirmation in the user's live Gemini session.
+
+## v1.2.0 protocol and separator checks - 2026-10-01
+
+The author-supplied protocol v1.1 is the source of truth. Local browser fixtures verify the full submitted text: user message, blank line, 32-hyphen separator, opening delimiter, full protocol and closing delimiter. Browser-generated nonbreaking spaces used for indentation are treated as equivalent spaces. Checks cover rich editors and the textarea fallback, preparation, removal, repeat preparation, level changes and repeated Gemini URL transitions. Real authenticated UI checks remain separate.

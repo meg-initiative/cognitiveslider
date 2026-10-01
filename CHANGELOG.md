@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 - 2026-10-01
+
+- Adopt the author-supplied CognitiveSlider v1.1 protocol verbatim.
+- Add a blank line and a horizontal text separator before injected instructions.
+- Align panel descriptions and documentation with the protocol.
+- Preserve the conversation-level retention fix from 1.1.0.
+
 ## 1.1.0 - 2026-09-30
 
 Based on the author's published v1.0.2 package. Preserves its editorial changes.

@@ -2,7 +2,7 @@
 
 ## One protocol, two delivery methods
 
-`protocol/cognitiveslider.md` is authoritative. `scripts/build.py` writes a JavaScript string containing those exact UTF-8 bytes into `extension/protocol.js`. At runtime, `core.js` replaces the first-line default with the selected two-digit level and wraps the rules in visible delimiters.
+`protocol/cognitiveslider.md` is authoritative. `scripts/build.py` writes a JavaScript string containing those exact UTF-8 bytes into `extension/protocol.js`. At runtime, `core.js` replaces the first-line default with the selected two-digit level and wraps the rules in visible delimiters, preceded by a blank line and a 32-hyphen separator.
 
 The MD can be pasted into provider instructions. The extension appends an equivalent text block to a normal user message; it has user-message priority, not system priority.
 
@@ -29,7 +29,7 @@ A draft already prepared and still matching the selected level can pass through 
 
 The final step confirms only that the platform Send button was invoked. It does not confirm backend delivery or model compliance. Attachment-only messages, embedded noneditable editor objects and alternative sending mechanisms are outside this preview's supported scope.
 
-The browser editing operation uses `document.execCommand('insertText')`, a legacy editor API. It is deliberately isolated in `write()` so maintainers can replace it with a provider-specific method when required. Direct `innerHTML` mutation is avoided because it can bypass controlled editor state. Fixture verification is necessary but does not prove compatibility with provider frameworks.
+The browser editing operation uses `document.execCommand('insertText')` and `insertLineBreak`, legacy editor APIs. Explicit line breaks preserve the blank lines in the protocol and separator. Rich editors may represent indentation spaces as nonbreaking spaces; text comparison treats these as equivalent spaces. It is deliberately isolated in `write()` so maintainers can replace it with a provider-specific method when required. Direct `innerHTML` mutation is avoided because it can bypass controlled editor state. Fixture verification is necessary but does not prove compatibility with provider frameworks.
 
 ## Level lifecycle
 

@@ -11,7 +11,7 @@
   function instructions(value) {
     return globalThis.MCS_PROTOCOL.replace(/^MCS_LEVEL=\d{2}/, 'MCS_LEVEL=' + String(level(value)).padStart(2, '0'));
   }
-  function suffix(value) { return '\n' + start + '\n' + instructions(value).trimEnd() + '\n' + end; }
+  function suffix(value) { return '\n\n--------------------------------\n' + start + '\n' + instructions(value).trimEnd() + '\n' + end; }
   // Only remove the exact block last inserted by this extension instance.
   // User-supplied text resembling a protocol is never broadly stripped.
   function base(text, previousSuffix) {
