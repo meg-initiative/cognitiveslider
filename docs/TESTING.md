@@ -8,13 +8,12 @@ Release: **1.2.0 technical preview**. Local verification: **2026-09-30**.
 - Chromium tests against locally intercepted HTML fixtures for ChatGPT-style, Claude-style and Gemini-style contenteditable editors, plus the ChatGPT textarea fallback.
 - Fixture checks cover native Send and Enter interception, input-event synchronization, zero-level submission, explicit preparation, deduplication, removal, slider updates, initial chat URL assignment, new-route defaults, ambiguous editor blocking and panel visibility at a 375-pixel viewport.
 - Syntax/manifest checks, equality of the bundled protocol to the source, and ZIP/source equality.
+- Loading this extension in a normal installed Chrome profile and checking all three authenticated live applications.
 
 These fixtures reproduce supported DOM contracts; they are not copies of the providers' full applications. Network requests to their fixture URLs are intercepted by the test runner and answered locally. No real messages are sent.
 
 ## Not yet performed
 
-- Loading this extension in a normal installed Chrome profile and checking all three authenticated live applications.
-- Confirmation that current provider frontend state accepts the inserted text exactly, including across languages, accounts and gradual UI rollouts.
 - Backend delivery, model compliance, long-session behavior or measurements of learning outcomes.
 - Chrome Web Store review. There is no store listing.
 
