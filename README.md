@@ -65,6 +65,7 @@ At zero, the AI follows ordinary behavior without added MCS participation requir
 - `scripts/build.py`: regenerates the embedded protocol and ZIP using Python 3.
 - `tests/`: core tests and browser fixture tests.
 - `docs/`: architecture, privacy, maintenance and future work.
+- `integrations/`: ready-to-use files for Claude Skills, Open WebUI, Ollama, LM Studio.
 
 There is no PHP website generator in this repository. The MD file is the source of truth. The extension bundles the same text and replaces only `MCS_LEVEL` for the selected level.
 
